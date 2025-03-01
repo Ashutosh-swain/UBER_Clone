@@ -11,6 +11,9 @@ const userRoutes = require("./routes/user.routes");
 const cors = require("cors");
 const app = express();
 
+// importing the cookie-parser middleware for interacting with cookies on the server
+const cookieParser = require("cookie-parser");
+
 // importing and connecting to the database
 const connectToDb = require("./db/db");
 connectToDb();
@@ -18,6 +21,7 @@ connectToDb();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
   res.send("The server is running fine!!!");

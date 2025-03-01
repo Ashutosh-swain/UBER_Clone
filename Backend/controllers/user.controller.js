@@ -4,6 +4,7 @@ const userModel = require("../models/user.model");
 // importing the user service for performing the actions on user database
 const userService = require("../services/user.service");
 const { validationResult } = require("express-validator");
+const blacklistTokenModel = require("../models/blacklistToken.model");
 
 // below code is for registering the user
 module.exports.registerUser = async (req, res, next) => {
@@ -56,5 +57,26 @@ module.exports.loginUser = async (req, res, next) => {
 
   const token = await user.generateAuthToken();
 
+  // after generating the jwt token we will set it in cookies
+
+  res.cookie("token", token);
+
   res.status(200).json({ token, user });
+};
+
+// below code is for getting the user profile
+module.exports.getUserProfile = async (req, res, next) => {
+  res.status(200).json(req.user);
+};
+
+// below code is for logout the user
+module.exports.logoutUser = async (req, res, next) => {
+  // clearing the cookie
+  res.clearCookie("token");
+  // finding the token from the header or cookies and blacklisting it
+  const token = req.cookies.token || req.headers.authorization.split(" ")[1];
+
+  await blacklistTokenModel.create({ token });
+
+  res.status(200).json({ message: "Logged out successfully" });
 };
