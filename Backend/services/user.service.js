@@ -1,5 +1,5 @@
 // Here we are creating a userservice that will directly interact with the mongodb database for performing different actions
-
+// This file contains the code for directly interacting with the database
 const userModel = require("../models/user.model");
 
 // we are creating different methods for interacting with the database

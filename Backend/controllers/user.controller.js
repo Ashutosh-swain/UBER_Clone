@@ -1,10 +1,11 @@
-// All the actions on user model will be handled here
+// All the actions on user model(Table) will be handled here
 
 const userModel = require("../models/user.model");
 // importing the user service for performing the actions on user database
 const userService = require("../services/user.service");
 const { validationResult } = require("express-validator");
 
+// below code is for registering the user
 module.exports.registerUser = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -26,6 +27,33 @@ module.exports.registerUser = async (req, res, next) => {
   });
 
   //Calling the function for creating the jwt token
+  const token = await user.generateAuthToken();
+
+  res.status(200).json({ token, user });
+};
+
+// below code is for login the user
+module.exports.loginUser = async (req, res, next) => {
+  // below code will check for the validation errors
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ error: errors.array() });
+  }
+
+  const { email, password } = req.body;
+  // we will be checking whther the user is present in the database or not with the email
+  const user = await userModel.findOne({ email }).select("+password");
+
+  if (!user) {
+    return res.status(401).json({ message: "Invalid email or password" });
+  }
+
+  const isMatch = await user.comparePassword(password);
+
+  if (!isMatch) {
+    return res.status(401).json({ message: "Invalid email or password" });
+  }
+
   const token = await user.generateAuthToken();
 
   res.status(200).json({ token, user });

@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    // using select because we don't want to send this while finding the user
+    // using select because we don't want to send this while finding the user by default, if we want password also then we need to ask for it explicitly
     select: false,
   },
 
