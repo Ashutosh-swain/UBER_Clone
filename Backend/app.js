@@ -7,6 +7,9 @@ const express = require("express");
 // Importing the user route
 const userRoutes = require("./routes/user.routes");
 
+// Importing the captain route
+const captainRoutes = require("./routes/captain.routes");
+
 // importing cors and for now we are not providing any domain so we will be accepting the request from all websites but in production we will be providing the domain from only which requests will be accepted
 const cors = require("cors");
 const app = express();
@@ -28,5 +31,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/users", userRoutes);
+app.use("/captains", captainRoutes);
 
 module.exports = app;
