@@ -61,6 +61,7 @@ module.exports.loginUser = async (req, res, next) => {
     return res.status(401).json({ message: "Invalid email or password" });
   }
 
+  // After finding the user from the database we will generate the jwt token
   const token = await user.generateAuthToken();
 
   // after generating the jwt token we will set it in cookies
